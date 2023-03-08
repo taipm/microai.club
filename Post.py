@@ -81,17 +81,17 @@ class Comment:
         return comment
 
 # Tạo một đối tượng Post và lưu vào cơ sở dữ liệu
-post = Post(title='Test Post', content='This is a test post')
-post.save()
+# post = Post(title='Test Post', content='This is a test post')
+# post.save()
 
-# Thêm một comment vào post
-post.add_comment(content='This is a test comment')
+# # Thêm một comment vào post
+# post.add_comment(content='This is a test comment')
 
-# Lấy một post theo id và in ra title và tất cả các comments của nó
-post_id = post.id
-post = Post.get_by_id(post_id)
-print('Title:', post.title)
-print('Comments:')
-for comment in post.comments:
-    print(comment.content)
+# # Lấy một post theo id và in ra title và tất cả các comments của nó
+# post_id = post.id
+# post = Post.get_by_id(post_id)
+# print('Title:', post.title)
+# print('Comments:')
+# for comment in post.comments:
+#     print(comment.content)
 
