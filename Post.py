@@ -1,22 +1,26 @@
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 from configparser import ConfigParser
+import certifi
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 config = ConfigParser()
 config.read('config.ini')
 
 class MongoHandler:
     def __init__(self, uri, db_name, posts_collection, comments_collection):
-        self.client = MongoClient(uri)
+        self.client = MongoClient(uri,tlsCAFile=certifi.where())
+        #MongoClient(uri)
         self.db = self.client[db_name]
         self.posts_collection = self.db[posts_collection]
         self.comments_collection = self.db[comments_collection]
 
 mongo_handler = MongoHandler(
     config.get('mongodb', 'uri'),
-    config.get('mongodb', 'db_name'),
-    config.get('mongodb', 'posts_collection'),
-    config.get('mongodb', 'comments_collection')
+    config.get('mongodb', 'database'),
+    config.get('mongodb', 'posts'),
+    config.get('mongodb', 'comments')
 )
 
 class Post:
@@ -75,3 +79,19 @@ class Comment:
         comment = Comment(post_id=comment_dict['post_id'], content=comment_dict['content'])
         comment.id = str(comment_dict['_id'])
         return comment
+
+# Tạo một đối tượng Post và lưu vào cơ sở dữ liệu
+post = Post(title='Test Post', content='This is a test post')
+post.save()
+
+# Thêm một comment vào post
+post.add_comment(content='This is a test comment')
+
+# Lấy một post theo id và in ra title và tất cả các comments của nó
+post_id = post.id
+post = Post.get_by_id(post_id)
+print('Title:', post.title)
+print('Comments:')
+for comment in post.comments:
+    print(comment.content)
+
