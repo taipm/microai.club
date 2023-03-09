@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
-from models.Comment import Comment
-from models.MongoHandler import mongo_handler
+from app.models.Comment import Comment
+from app.models.MongoHandler import mongo_handler
 
 class Post:
     def __init__(self, title, content):
