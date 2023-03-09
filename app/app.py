@@ -2,8 +2,8 @@ from datetime import datetime
 import os
 from flask import Flask, render_template, jsonify
 from flask import request
-from models.Answer import Answer
-from models.Question import Question
+from app.models.Answer import Answer
+from app.models.Question import Question
 
 app = Flask(__name__)
 
