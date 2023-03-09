@@ -1,11 +1,15 @@
+from configparser import ConfigParser
 from datetime import datetime
 import os
 from flask import Flask, render_template, jsonify
 from flask import request
+from app.ai.MicroAI import MicroAI
 from app.models.Answer import Answer
 from app.models.Question import Question
 
 app = Flask(__name__)
+config = ConfigParser()
+config.read('/Users/taipm/Documents/GitHub/microai.club/config.ini')
 
 @app.route('/')
 def home():
@@ -76,6 +80,19 @@ def add_answer():
         return jsonify({'success': False, 'message': 'Question not found'}), 404
     question.add_answer(text)
     return jsonify({'success': True})
+
+@app.route('/api/microai_answer', methods=['POST'])
+def microai_answer():
+    question_id = request.form.get('question_id')
+    question = Question.get_by_id(question_id)
+    ai_result = MicroAI(api_key=config.get('openai', 'api_key')).generate_answer(question.text)
+    print(ai_result)
+    print(ai_result['answer'])
+    if not question:
+        return jsonify({'success': False, 'message': 'Question not found'}), 404
+    question.add_answer(ai_result)
+    return jsonify({'success': True, 'answer': ai_result['answer']})
+    #return jsonify({'success': True})
 
 def get_answer(q:Question):
     # Implement your logic for generating the answer based on the question
