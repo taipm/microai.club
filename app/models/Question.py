@@ -1,6 +1,5 @@
 from app.models.Answer import Answer
 from app.models.MongoHandler import mongo_handler
-
 from bson.objectid import ObjectId
 
 class Question:

@@ -48,13 +48,13 @@
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // function updateTime() {
-        //     $.getJSON('/api/time', function(data) {
-        //         var timeString = data.time;
-        //         $('#clock').text(timeString);
-        //     });
-        // }
-        // setInterval(updateTime, 1000);
+        function updateTime() {
+            $.getJSON('/api/time', function(data) {
+                var timeString = data.time;
+                $('#clock').text(timeString);
+            });
+        }
+        setInterval(updateTime, 1000);
 
         $('#question-form').submit(function(event) {
             event.preventDefault();

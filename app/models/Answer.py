@@ -1,4 +1,5 @@
-from models.MongoHandler import mongo_handler
+#from app.models.MongoHandler import mongo_handler
+from app.models.MongoHandler import mongo_handler
 from bson.objectid import ObjectId
 
 class Answer:

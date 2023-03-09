@@ -1,5 +1,5 @@
 
-from models.MongoHandler import mongo_handler
+from app.models.MongoHandler import mongo_handler
 
 
 class Comment:

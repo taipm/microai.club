@@ -11,16 +11,44 @@
                         {% for answer in question.answers %}
                             <p class="card-text">{{ answer.text }}</p>
                         {% endfor %}
-                        <form action="/api/answer" method="post">
+                        <a href="#" class="answer-link">Trả lời</a>
+                        <form class="answer-form" style="display: none;">
                             <input type="hidden" name="question_id" value="{{ question.id }}">
                             <div class="form-group">
                                 <textarea class="form-control" rows="3" name="answer"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Gửi</button>
+                            <button type="button" class="btn btn-secondary cancel-answer">Hủy</button>
                         </form>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.answer-link').click(function() {
+                $(this).hide();
+                $(this).siblings('.answer-form').show();
+            });
+            $('.cancel-answer').click(function() {
+                $(this).closest('.answer-form').hide();
+                $(this).closest('.answer-form').siblings('.answer-link').show();
+            });
+            $('.answer-form').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/api/answer',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        console.log(response);
+                        window.location.reload();
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
