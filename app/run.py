@@ -6,8 +6,10 @@ from flask import request
 from app.ai.MicroAI import MicroAI
 from app.models.Answer import Answer
 from app.models.Question import Question
+from config import OPEN_AI_KEY
+from app import app
 
-app = Flask(__name__)
+#app = Flask(__name__)
 config = ConfigParser()
 config.read('/Users/taipm/Documents/GitHub/microai.club/config.ini')
 
