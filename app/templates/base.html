@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  
+  {% include 'header.html' %}
+  <div id="message"></div>
+  <div class="container my-3">
+    {% block content %}{% endblock %}
+  </div>
+  {% include 'footer.html' %}  
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
+    <!-- <script>
+        function getLatestRecord() {
+            $.ajax({
+                type: 'GET',
+                url: 'api/latest_record',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    var message = 'New record: ' + data.collection + ', ID: ' + data.id + ', Timestamp: ' + data.timestamp;
+                    $('#message').html(message);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            //setInterval(getLatestRecord, 5000);
+        });
+    </script> -->
+    <script>        
+      function updateTime() {
+          $.getJSON('/api/time', function(data) {
+              var timeString = data.time;
+              $('#clock').text(timeString);
+          });
+      }
+      //setInterval(updateTime, 1000);
+  </script>
+</body>
+</html>
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+{% endblock %}

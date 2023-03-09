@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Ask a Question</h2>
+                        <form id="question-form">
+                            <div class="form-group">
+                                <label for="question">Question:</label>
+                                <!-- <input type="hidden" id="question-id" name="question-id" value=""> -->
+                                <input type="text" class="form-control" id="question" name="question">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h2 class="card-title">Questions</h2>
+                        <ul class="list-group" id="question-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Realtime Clock</h2>
+                        <p class="card-text">The current time is <span id="clock"></span>.</p>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h2 class="card-title">Answer</h2>
+                        <p class="card-text">The answer to your question is: <span id="answer"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // function updateTime() {
+        //     $.getJSON('/api/time', function(data) {
+        //         var timeString = data.time;
+        //         $('#clock').text(timeString);
+        //     });
+        // }
+        // setInterval(updateTime, 1000);
+
+        $('#question-form').submit(function(event) {
+            event.preventDefault();
+            var question = $('#question').val();
+            $.post('/api/question', {'question': question}, function(data) {
+                var questionId = data.question_id;
+                var answerString = data.answer;
+                $('#answer').text(answerString);
+                $('#question-list').prepend('<li class="list-group-item"><a href="#" data-question-id="' + questionId + '">' + question + '</a></li>');
+            });
+        });
+
+        $('#question-list').on('click', 'a', function(event) {
+            event.preventDefault();
+            var questionId = $(this).data('question-id');
+            $.getJSON('/api/question/' + questionId, function(data) {
+                var answerString = data.answer;
+                $('#answer').text(answerString);
+            });
+        });
+    </script>
+{% endblock %}

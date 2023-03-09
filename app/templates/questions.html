@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="mt-4">Questions</h1>
+            {% for question in questions %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title"><a href="/questions/{{ question.id }}">{{ question.text }}</a></h2>
+                        {% for answer in question.answers %}
+                            <p class="card-text">{{ answer.text }}</p>
+                        {% endfor %}
+                        <form action="/api/answer" method="post">
+                            <input type="hidden" name="question_id" value="{{ question.id }}">
+                            <div class="form-group">
+                                <textarea class="form-control" rows="3" name="answer"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
