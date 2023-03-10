@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, render_template
-from app.models.Answer import Answer
-from app.models.Question import Question
+from models.Answer import Answer
+from models.Question import Question
 from . import question_bp
 #question_bp = Blueprint('questions', __name__)
 #question_bp = Blueprint('questions', __name__, url_prefix='/questions')
