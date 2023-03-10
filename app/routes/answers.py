@@ -1,10 +1,6 @@
 from flask import Blueprint, jsonify, request
-
 from app.models import Answer
-
-#from models.Answer import Answer
 from . import answers_bp
-#answers_bp = Blueprint('answers', __name__, url_prefix='/')
 
 @answers_bp.route('/')
 def list_answers():
