@@ -6,7 +6,6 @@ from flask import request
 from app.ai.MicroAI import MicroAI
 from app.models.Answer import Answer
 from app.models.Question import Question
-from config import OPEN_AI_KEY
 from app import app
 
 #app = Flask(__name__)
@@ -94,10 +93,8 @@ def microai_answer():
         return jsonify({'success': False, 'message': 'Question not found'}), 404
     question.add_answer(ai_result)
     return jsonify({'success': True, 'answer': ai_result['answer']})
-    #return jsonify({'success': True})
 
 def get_answer(q:Question):
-    # Implement your logic for generating the answer based on the question
     answer = "This is the answer to your question."
     # a = Answer(question_id=q.id,text=answer)
     # a.save()

@@ -27,15 +27,12 @@
                     <button id="microai-btn" class="btn btn-primary">MicroAI Answer</button>
                     <div id="microai-answer" style="margin-top: 20px;"></div>
                     <div id="microai-loading" style="display:none; margin-top: 20px;">Loading...</div>
-                    <!-- <button id="microai-btn" class="btn btn-primary">MicroAI Answer</button>
-                    <div id="microai-answer" style="margin-top: 20px;"></div> -->
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script>
         $(document).ready(function() {
             $('#answer-form').on('submit', function(e) {
@@ -58,53 +55,14 @@
                 $.ajax({
                     url: '/api/microai_answer',
                     method: 'POST',
-                    data: $('#answer-form').serialize(),
+                    data: $('#answer-form').serialize(),                    
                     success: function(response) {
-                        $('#microai-answer').html(response['answer']);
-                        $('#microai-loading').hide();
+                        var answer = response['answer'];
+                    $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p></div></div>');
+                    $('#microai-loading').hide();
                     }
                 });
             });
         });
     </script>
-
-    <!-- <script>
-        $(document).ready(function() {
-            $('#answer-form').on('submit', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: '/api/answer',
-                    method: 'POST',
-                    data: $('#answer-form').serialize(),
-                    success: function(response) {
-                        console.log(response);
-                        window.location.reload();
-                    }
-                });
-            });
-
-            $('#microai-btn').on('click', function(e) {
-                e.preventDefault();
-                var question = '{{ question.text }}';
-                $.ajax({
-                    url: '/api/microai_answer',
-                    method: 'POST',
-                    data: $('#answer-form').serialize(),
-                    success: function(response) {
-                        // console.log(response);
-                        // window.location.reload();
-                        $('#microai-answer').html(response['answer']);
-                    }
-                    // method: 'POST',
-                    // data: {
-                    //     'question': question
-                    // },
-                    // success: function(response) {
-                    //     console.log(response);
-                    //     $('#microai-answer').html(response['answer']);
-                    // }
-                });
-            });
-        });
-    </script> -->
 {% endblock %}

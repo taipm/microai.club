@@ -7,7 +7,9 @@
             {% for question in questions %}
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h2 class="card-title"><a href="/questions/{{ question.id }}">{{ question.text }}</a></h2>
+                        <h2 class="card-title">
+                            <a href="{{ url_for('questions.show', id=question._id) }}">{{question.text}}</a>
+                        </h2> 
                         {% for answer in question.answers %}
                             <p class="card-text">{{ answer.text }}</p>
                         {% endfor %}
