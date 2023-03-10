@@ -25,10 +25,9 @@ class Question:
     def __init__(self, text):        
         self.text = text
         self.answers = []
-        #self.collection = db['questions']
 
     def save(self):
-        question_id = db.questions_collection.insert_one({
+        question_id = self.collection.insert_one({
             'text': self.text,
             'answers': []
         }).inserted_id
@@ -45,7 +44,7 @@ class Question:
     
     @classmethod
     def get_by_id(cls, question_id):
-        question = cls.collection.find_one({'_id': ObjectId(question_id)})#find_one({'_id': question_id})
+        question = cls.collection.find_one({'_id': ObjectId(question_id)})
         if question:            
             return Question.from_dict(question)
         else:

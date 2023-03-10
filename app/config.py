@@ -1,9 +1,8 @@
 from configparser import ConfigParser
 
-class ConfigParser:
+class Config:
     def __init__(self):
         self.config = ConfigParser()
-        #self.config.read('config.ini')
         self.config.read('/Users/taipm/Documents/GitHub/microai.club/config.ini')
 
     def get(self, section, key):
