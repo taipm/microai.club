@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.models import Answer
+from app.models.Answer import Answer
 from . import answers_bp
 
 @answers_bp.route('/')

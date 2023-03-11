@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
-from .Answer import Answer
-from .MongoDb import db
+from app.models.Answer import Answer
+from app.models.MongoDb import db
 
 class Question:
     collection = db['questions']

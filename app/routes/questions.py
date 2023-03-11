@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, render_template
-from models.Answer import Answer
-from models.Question import Question
+from app.models.Question import Question
+from app.models.Answer import Answer
+#from Question import Question
 from . import question_bp
 
 @question_bp.route('/', methods=['GET'])
