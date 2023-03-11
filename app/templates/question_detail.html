@@ -53,13 +53,16 @@
                 var question = '{{ question.text }}';
                 $('#microai-loading').show();
                 $.ajax({
-                    url: '/api/microai_answer',
+                    url: '/answers/microai_answer',
                     method: 'POST',
                     data: $('#answer-form').serialize(),                    
                     success: function(response) {
-                        var answer = response['answer'];
-                    $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p></div></div>');
-                    $('#microai-loading').hide();
+                        var answer = response.answer;
+                        //var answer = response;
+                        //console.log('Trả về: ' + answer.text)
+                        //$('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + JSON.stringify(answer) + '</p></div></div>');
+                        $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p></div></div>');
+                        $('#microai-loading').hide();
                     }
                 });
             });

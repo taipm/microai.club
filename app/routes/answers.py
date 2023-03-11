@@ -1,5 +1,11 @@
+from configparser import ConfigParser
+import os
 from flask import Blueprint, jsonify, request
+from app import config
+from app.ai.MicroAI import MicroAI
 from app.models.Answer import Answer
+from app.models.MongoDb import get_openai_key
+from app.models.Question import Question
 from . import answers_bp
 
 @answers_bp.route('/')
@@ -51,3 +57,18 @@ def update_answer(answer_id):
     answer.save()
 
     return jsonify({'answer': answer.to_dict()})
+
+
+@answers_bp.route('/microai_answer', methods=['POST'])
+def microai_answer():
+    question_id = request.form.get('question_id')
+    question = Question.get_by_id(question_id)
+    if not question:
+        return jsonify({'success': False, 'message': 'Question not found'}), 404
+    open_ai_key = get_openai_key()
+    print(f'OpenAI: {open_ai_key}')
+    text = MicroAI(api_key=open_ai_key).generate_answer(question.text)
+    print(f'Micro-AI: {text}')
+    answer = question.add_answer(text)
+    return jsonify({'answer': text['answer']})
+    #return jsonify({'answer': answer.to_dict()})

@@ -10,7 +10,7 @@
                         <form id="question-form">
                             <div class="form-group">
                                 <label for="question">Question:</label>
-                                <!-- <input type="hidden" id="question-id" name="question-id" value=""> -->
+                                <input type="hidden" id="question-id" name="question-id" value="">
                                 <input type="text" class="form-control" id="question" name="question">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -59,7 +59,7 @@
         $('#question-form').submit(function(event) {
             event.preventDefault();
             var question = $('#question').val();
-            $.post('/api/question', {'question': question}, function(data) {
+            $.post('/questions/create', {'question': question}, function(data) {
                 var questionId = data.question_id;
                 var answerString = data.answer;
                 $('#answer').text(answerString);

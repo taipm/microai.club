@@ -20,13 +20,33 @@ def show(id):
     print(f'{len(answers)}')
     return render_template('question_detail.html', question=question, answers=answers)
 
-@question_bp.route('/', methods=['POST'])
+# @question_bp.route('/create', methods=['POST'])
+# def create_question():
+#     print(f'Đang gọi hàm create_question')
+#     text = request.json.get('text', None)
+    
+#     if not text:
+#         return jsonify({'message': 'Question text is required.'}), 400
+
+#     question = Question(text=text)
+#     question.save()
+
+#     return jsonify({'question': question})
+
+@question_bp.route('/create', methods=['GET','POST'])
 def create_question():
-    text = request.json.get('text', None)
-    if not text:
-        return jsonify({'message': 'Question text is required.'}), 400
-
-    question = Question(text=text)
-    question.save()
-
+    question = request.form['question']
+    print(f'Đang gọi hàm tạo câu hỏi {question}')
+    question_id = request.form.get('question_id')
+    print(f'{question_id} : {question}')
+    if question_id:        
+        existing_question = Question.get_by_id(question_id)
+        #existing_question.answer = get_answer(existing_question)
+        existing_question.save()
+        return jsonify({'question_id': question_id})
+        #return jsonify({'question_id': question_id, 'answer': existing_question.answer})
+    
+    new_question = Question(text=question)
+    new_question.save()
     return jsonify({'question': question})
+    #return jsonify({'question_id': new_question.id, 'answer': get_answer(new_question)})

@@ -1,20 +1,4 @@
-# import os
-# from pymongo import MongoClient
-# import certifi
-# import ssl
-
-# ssl._create_default_https_context = ssl._create_unverified_context
-
-# #config = Config()
-# print(f'Database name: ')
-# MONGODB_URI = os.environ.get('uri')
-# DATABASE_NAME = os.environ.get('database') #'micro_ai'
-# print(f'Database name: {str(DATABASE_NAME)}')
-# client = MongoClient(MONGODB_URI,tlsCAFile=certifi.where())
-# db = client[DATABASE_NAME]
-# #db = client[config.get('mongodb', 'database')]
-
-
+from configparser import ConfigParser
 import os
 from pymongo import MongoClient
 import certifi
@@ -40,6 +24,10 @@ def get_database_uri():
 def get_database_name():
     return os.environ.get('DATABASE_NAME', 'micro_ai')
 
+def get_openai_key():
+    config = ConfigParser()
+    config.read('/Users/taipm/Documents/GitHub/microai.club/config.ini')
+    return os.environ.get('open_ai_key', config.get('openai', 'api_key'))
 
 def get_mongo_client():
     uri = get_database_uri()

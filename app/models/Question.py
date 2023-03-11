@@ -18,7 +18,8 @@ class Question:
     def add_answer(self, text):
         answer = Answer(question_id=self.id, text=text)
         answer.save()
-        self.answers.append(answer.id)
+        self.answers.append(str(answer.id))
+        return answer
     
     @classmethod
     def list(cls):
