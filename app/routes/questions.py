@@ -34,9 +34,12 @@ def create_question():
         #return jsonify({'question_id': question_id, 'answer': existing_question.answer})
     
     new_question = Question(text=question)
-    new_question.save()
     open_ai_key = get_openai_key()
     answer = MicroAI(api_key=open_ai_key).generate_answer(question)
+    #new_question.id = question_id
+    new_question.save()
+    new_question.add_answer(answer)
+    
     print(f'{answer}')
     #return jsonify({'question': question})
     return jsonify({'question_id': new_question.id, 'answer': answer})
