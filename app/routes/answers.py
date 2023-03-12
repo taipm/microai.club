@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app.ai.MicroAI import MicroAI
 from app.models.Answer import Answer
-from app.models.MongoDb import get_openai_key,get_wolframalpha_key
+from app.models.MongoDb import get_openai_key
 from app.models.Question import Question
 from . import answers_bp
 
@@ -63,9 +63,7 @@ def microai_answer():
     if not question:
         return jsonify({'success': False, 'message': 'Question not found'}), 404
     open_ai_key = get_openai_key()
-    print(f'OpenAI: {open_ai_key}')
     text = MicroAI(api_key=open_ai_key).generate_answer(question.text)
-    print(f'Micro-AI: {text}')
     answer = question.add_answer(text)
     return jsonify({'answer': text['answer']})
     #return jsonify({'answer': answer.to_dict()})

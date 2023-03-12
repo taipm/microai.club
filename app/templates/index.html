@@ -61,7 +61,7 @@
             var question = $('#question').val();
             $.post('/questions/create', {'question': question}, function(data) {
                 var questionId = data.question_id;
-                var answerString = data.answer;
+                var answerString = data.answer.answer;
                 $('#answer').text(answerString);
                 $('#question-list').prepend('<li class="list-group-item"><a href="#" data-question-id="' + questionId + '">' + question + '</a></li>');
             });

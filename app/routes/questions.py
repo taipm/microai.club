@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request, render_template
 from app.models.Question import Question
 from app.models.Answer import Answer
-#from Question import Question
 from . import question_bp
+from app.ai.MicroAI import MicroAI
+from app.models.MongoDb import get_openai_key
 
 @question_bp.route('/', methods=['GET'])
 def list_questions():
@@ -20,25 +21,11 @@ def show(id):
     print(f'{len(answers)}')
     return render_template('question_detail.html', question=question, answers=answers)
 
-# @question_bp.route('/create', methods=['POST'])
-# def create_question():
-#     print(f'Đang gọi hàm create_question')
-#     text = request.json.get('text', None)
-    
-#     if not text:
-#         return jsonify({'message': 'Question text is required.'}), 400
-
-#     question = Question(text=text)
-#     question.save()
-
-#     return jsonify({'question': question})
-
 @question_bp.route('/create', methods=['GET','POST'])
 def create_question():
     question = request.form['question']
     print(f'Đang gọi hàm tạo câu hỏi {question}')
     question_id = request.form.get('question_id')
-    print(f'{question_id} : {question}')
     if question_id:        
         existing_question = Question.get_by_id(question_id)
         #existing_question.answer = get_answer(existing_question)
@@ -48,5 +35,8 @@ def create_question():
     
     new_question = Question(text=question)
     new_question.save()
-    return jsonify({'question': question})
-    #return jsonify({'question_id': new_question.id, 'answer': get_answer(new_question)})
+    open_ai_key = get_openai_key()
+    answer = MicroAI(api_key=open_ai_key).generate_answer(question)
+    print(f'{answer}')
+    #return jsonify({'question': question})
+    return jsonify({'question_id': new_question.id, 'answer': answer})
