@@ -24,13 +24,15 @@ def get_database_uri():
 def get_database_name():
     return os.environ.get('DATABASE_NAME', 'micro_ai')
 
+try:
+    from app.config import *
+except ImportError:
+    pass
 def get_openai_key():
-    #TAIPM: DEV
-    # config = ConfigParser()
-    # config.read('/Users/taipm/Documents/GitHub/microai.club/config.ini')
-    #return os.environ.get('open_ai_key', config.get('openai', 'api_key'))
-    #HOSTING
-    return os.environ.get('open_ai_key', '')
+    try:
+        return os.environ.get('open_ai_key', openai_key)
+    except:
+       return os.environ.get('open_ai_key', 'config.openai_key') 
 
 def get_mongo_client():
     uri = get_database_uri()
