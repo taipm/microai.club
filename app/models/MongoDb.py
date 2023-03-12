@@ -3,7 +3,6 @@ import os
 from pymongo import MongoClient
 import certifi
 import ssl
-
 ssl._create_default_https_context = ssl._create_unverified_context
 
 class Config:
@@ -33,6 +32,10 @@ def get_openai_key():
         return os.environ.get('open_ai_key', openai_key)
     except:
        return os.environ.get('open_ai_key', 'config.openai_key') 
+
+def get_wolframalpha_key():
+    app_id='GXJJJY-926WJ78HJ3'
+    return app_id
 
 def get_mongo_client():
     uri = get_database_uri()

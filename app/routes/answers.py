@@ -1,7 +1,4 @@
-# from configparser import ConfigParser
-# import os
 from flask import Blueprint, jsonify, request
-# from . import config
 from app.ai.MicroAI import MicroAI
 from app.models.Answer import Answer
 from app.models.MongoDb import get_openai_key
