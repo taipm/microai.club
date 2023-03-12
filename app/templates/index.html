@@ -60,7 +60,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function updateTime() {
-            $.getJSON('/api/time', function(data) {
+            $.getJSON('/time', function(data) {
                 var timeString = data.time;
                 $('#clock').text(timeString);
             });
@@ -87,24 +87,7 @@
             });
         });
 
-        // $('#translate-btn').on('click', function(e) {
-        //         e.preventDefault();
-        //         var text = $('#answer').text();
-        //         $('#microai-loading').show();
-        //         $.ajax({
-        //             url: '/answers/translate',
-        //             method: 'POST',
-        //             data: $('#answer').text(),                    
-        //             success: function(response) {
-        //                 var answer = response.answer;
-        //                 //var answer = response;
-        //                 //console.log('Trả về: ' + answer.text)
-        //                 //$('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + JSON.stringify(answer) + '</p></div></div>');
-        //                 $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p></div></div>');
-        //                 $('#microai-loading').hide();
-        //             }
-        //         });
-        //     });
+        
         $('#translate-btn').on('click', function(e) {
             e.preventDefault();
             var text = $('#answer').text().trim(); // trim để xóa khoảng trắng đầu cuối

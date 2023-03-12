@@ -1,4 +1,6 @@
+import datetime
 from bson.objectid import ObjectId
+import pymongo
 from app.models.Answer import Answer
 from app.models.MongoDb import db
 
@@ -7,10 +9,12 @@ class Question:
     def __init__(self, text):        
         self.text = text
         self.answers = []
+        self.created_at = datetime.datetime.utcnow()
 
     def save(self):
         question_id = self.collection.insert_one({
             'text': self.text,
+            'created_at':self.created_at,
             'answers': []
         }).inserted_id
         self.id = str(question_id)
@@ -23,7 +27,8 @@ class Question:
     
     @classmethod
     def list(cls):
-        return list(cls.collection.find())
+        #return list(cls.collection.find().sort('created_at'))
+        return list(cls.collection.find().sort('created_at', pymongo.DESCENDING))
     
     @classmethod
     def get_by_id(cls, question_id):
@@ -38,4 +43,5 @@ class Question:
         question = Question(text=question_dict['text'])
         question.id = str(question_dict['_id'])
         question.answers = question_dict['answers']
+        question.created_at = str(question_dict['create_at'])
         return question
