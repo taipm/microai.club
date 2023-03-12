@@ -27,6 +27,7 @@ try:
     from config import *
 except ImportError:
     pass
+
 def get_openai_key():
     try:
         return os.environ.get('open_ai_key', openai_key)

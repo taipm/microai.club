@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app.ai.MicroAI import MicroAI
 from app.models.Answer import Answer
-from app.models.MongoDb import get_openai_key
+from app.models.MongoDb import get_openai_key,get_wolframalpha_key
 from app.models.Question import Question
 from . import answers_bp
 
