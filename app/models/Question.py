@@ -43,5 +43,5 @@ class Question:
         question = Question(text=question_dict['text'])
         question.id = str(question_dict['_id'])
         question.answers = question_dict['answers']
-        question.created_at = str(question_dict['create_at'])
+        question.created_at = str(question_dict['created_at'])
         return question

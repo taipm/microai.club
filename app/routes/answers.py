@@ -56,6 +56,32 @@ def update_answer(answer_id):
 
     return jsonify({'answer': answer.to_dict()})
 
+@answers_bp.route('/answer', methods=['POST'])
+def answer_question():
+    # Lấy dữ liệu từ form trả lời câu hỏi
+    question_id = request.form.get('question_id')
+    answer_text = request.form.get('answer')
+    print(f'Đang trả lời {question_id} : {answer_text}')
+    # Tìm câu hỏi tương ứng trong cơ sở dữ liệu
+    question = Question.get_by_id(question_id)
+
+    # Tạo câu trả lời mới
+    #answer = Answer(answer_text)
+    answer = Answer(text=answer_text, question_id=question_id)
+    #answer.question_id = question_id
+
+    # Lưu câu trả lời vào cơ sở dữ liệu
+    answer.save()
+
+    # Thêm câu trả lời vào danh sách các câu trả lời của câu hỏi tương ứng
+    question.answers.append(answer)
+    question.save()
+
+    # Trả về thông tin của câu trả lời để cập nhật trang web
+    return jsonify({
+        'answer_text': answer.text,
+        'created_at': answer.created_at.strftime('%Y-%m-%d %H:%M:%S')
+    })
 
 @answers_bp.route('/microai_answer', methods=['POST'])
 def microai_answer():
@@ -67,26 +93,6 @@ def microai_answer():
     text = MicroAI(api_key=open_ai_key).generate_answer(question.text)
     answer = question.add_answer(text)
     return jsonify({'answer': text['answer']})
-    #return jsonify({'answer': answer.to_dict()})
-
-# @answers_bp.route('/translate', methods=['POST'])
-# def translate():
-#     text = request.form.get('answer')
-#     print(f'Đang gọi hàm translate: {text}')
-#     translator = Translator(to_lang='vi', from_lang='en')
-#     transText = translator.translate(text=text)
-#     return jsonify({'answer': transText})
-#     # question_id = request.form.get('question_id')
-#     # question = Question.get_by_id(question_id)
-#     # if not question:
-#     #     return jsonify({'success': False, 'message': 'Question not found'}), 404
-#     # open_ai_key = get_openai_key()
-#     # text = MicroAI(api_key=open_ai_key).generate_answer(question.text)
-#     # answer = question.add_answer(text)
-#     # return jsonify({'answer': text['answer']})
-#@answers_bp.route('/translate', methods=['POST'])
-#from googletrans import Translator
-#from flask import jsonify, request
 
 @answers_bp.route('/translate', methods=['POST'])
 def translate():
