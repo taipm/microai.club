@@ -23,6 +23,17 @@
                         <ul class="list-group" id="question-list">
                         </ul>
                     </div>
+                    <div class="card-body">
+                        <h2 class="card-title">Answer</h2>
+                        <p class="card-text">The answer to your question is: <span id="answer"></span></p>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <button id="translate-btn" class="btn btn-primary">Translate</button>
+                                <div id="microai-answer" style="margin-top: 20px;"></div>
+                                <div id="microai-loading" style="display:none; margin-top: 20px;">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
@@ -34,8 +45,8 @@
                 </div>
                 <div class="card mt-4">
                     <div class="card-body">
-                        <h2 class="card-title">Answer</h2>
-                        <p class="card-text">The answer to your question is: <span id="answer"></span></p>
+                        <h2 class="card-title">Translate</h2>
+                        <p class="card-text">The answer to your question is: <span id="translate"></span></p>
                     </div>
                 </div>
             </div>
@@ -75,5 +86,51 @@
                 $('#answer').text(answerString);
             });
         });
+
+        // $('#translate-btn').on('click', function(e) {
+        //         e.preventDefault();
+        //         var text = $('#answer').text();
+        //         $('#microai-loading').show();
+        //         $.ajax({
+        //             url: '/answers/translate',
+        //             method: 'POST',
+        //             data: $('#answer').text(),                    
+        //             success: function(response) {
+        //                 var answer = response.answer;
+        //                 //var answer = response;
+        //                 //console.log('Trả về: ' + answer.text)
+        //                 //$('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + JSON.stringify(answer) + '</p></div></div>');
+        //                 $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p></div></div>');
+        //                 $('#microai-loading').hide();
+        //             }
+        //         });
+        //     });
+        $('#translate-btn').on('click', function(e) {
+            e.preventDefault();
+            var text = $('#answer').text().trim(); // trim để xóa khoảng trắng đầu cuối
+            if (text === '') { // nếu không có văn bản, không gửi yêu cầu và hiển thị thông báo
+                alert('Please enter some text to translate.');
+                return;
+            }
+            $('#microai-loading').show();
+            $.ajax({
+                url: '/answers/translate',
+                method: 'POST',
+                data: {answer: text}, // sửa key thành 'answer' để phù hợp với Flask route
+                success: function(response) {
+                    var answer = response.answer;
+                    $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p></div></div>');
+                    $('#microai-loading').hide();
+                },
+                error: function(xhr, status, error) { // xử lý lỗi nếu có
+                    console.error(xhr.responseText);
+                    alert('An error occurred while translating the text. Please try again later.');
+                    $('#microai-loading').hide();
+                }
+            });
+        });
+
+
+
     </script>
 {% endblock %}

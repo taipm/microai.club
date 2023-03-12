@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from translate import Translator
 from app.models.Answer import Answer
 from app.ai.MicroAI import MicroAI
 from app.models.MongoDb import get_openai_key
@@ -67,3 +68,39 @@ def microai_answer():
     answer = question.add_answer(text)
     return jsonify({'answer': text['answer']})
     #return jsonify({'answer': answer.to_dict()})
+
+# @answers_bp.route('/translate', methods=['POST'])
+# def translate():
+#     text = request.form.get('answer')
+#     print(f'Đang gọi hàm translate: {text}')
+#     translator = Translator(to_lang='vi', from_lang='en')
+#     transText = translator.translate(text=text)
+#     return jsonify({'answer': transText})
+#     # question_id = request.form.get('question_id')
+#     # question = Question.get_by_id(question_id)
+#     # if not question:
+#     #     return jsonify({'success': False, 'message': 'Question not found'}), 404
+#     # open_ai_key = get_openai_key()
+#     # text = MicroAI(api_key=open_ai_key).generate_answer(question.text)
+#     # answer = question.add_answer(text)
+#     # return jsonify({'answer': text['answer']})
+#@answers_bp.route('/translate', methods=['POST'])
+#from googletrans import Translator
+#from flask import jsonify, request
+
+@answers_bp.route('/translate', methods=['POST'])
+def translate():
+    text = request.form.get('answer')
+    print(f'Đang gọi hàm translate: {text}')
+    if not text:
+        return jsonify({'error': 'No text provided'}), 400
+    
+    translator = Translator(to_lang='vi', from_lang='en')
+    try:
+        transText = translator.translate(text=text)
+    except Exception as e:
+        print(e)
+        return jsonify({'error': 'Failed to translate text'}), 500
+    return jsonify({'answer': transText})
+
+
