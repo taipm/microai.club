@@ -25,7 +25,7 @@ def get_database_name():
     return os.environ.get('DATABASE_NAME', 'micro_ai')
 
 try:
-    from app.config import *
+    from config import *
 except ImportError:
     pass
 def get_openai_key():
