@@ -46,8 +46,7 @@ def get_wolframalpha_result(query):
     for pod in res.pods:
         # Lấy danh sách các subpod bên trong pod
         for subpod in pod.subpods:
-            # Thêm nội dung của subpod vào danh sách kết quả
-            print(dir(subpod))
+            # Thêm nội dung của subpod vào danh sách kết quả            
             if subpod.plaintext:
                 results.append(subpod.plaintext)
                 
@@ -92,6 +91,32 @@ def get_wolframalpha_result(query):
     # return res
 
    
+def get_wolframalpha_result(query):
+    res = client.query(query)
+    results = []
+
+    # Lấy danh sách các pods có kết quả trả về
+    for pod in res.pods:
+        # Lấy danh sách các subpod bên trong pod
+        for subpod in pod.subpods:
+            # Thêm nội dung của subpod vào danh sách kết quả
+            if subpod.img:
+                # Lấy đường dẫn tới hình ảnh tương ứng với kết quả
+                img_url = subpod.img.src
+                # Tạo thẻ HTML để hiển thị hình ảnh
+                img_html = f'<img src="{img_url}" alt="{pod.title}">'
+                # Thêm thẻ HTML vào danh sách kết quả
+                results.append(img_html)
+            elif subpod.plaintext:
+                # Thêm nội dung của subpod vào danh sách kết quả
+                results.append(subpod.plaintext)
+
+    # Kiểm tra xem có kết quả nào được tìm thấy hay không
+    if not results:
+        return "Lỗi: Không có kết quả phù hợp được tìm thấy."
+
+    # Chuyển đổi danh sách kết quả thành chuỗi HTML và trả về
+    return "<br>".join(results)
 
 q = "Solve x^2 - 3x - 7 = 0"
 result = get_wolframalpha_result(query=q)
