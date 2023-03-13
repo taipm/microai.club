@@ -18,7 +18,7 @@ def GetIntradayData(symbol):
         else:
             df = df.append(df_next)
     df = df[['price', 'volume', 'time']]  # Keep only relevant columns
-    df['time'] = pd.to_datetime(df['time'])  # Convert time column to datetime
+    df['time'] = pd.to_datetime(df['time']) 
     return df
 
 @intraday_bp.route('/')
