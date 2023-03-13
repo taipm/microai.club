@@ -45,6 +45,6 @@ class Answer:
 
     @staticmethod
     def from_dict(answer_dict):
-        answer = Answer(question_id=answer_dict['question_id'], text=answer_dict['text'])
+        answer = Answer(question_id=answer_dict['question_id'], text = answer_dict['text'])
         answer.id = str(answer_dict['_id'])
         return answer

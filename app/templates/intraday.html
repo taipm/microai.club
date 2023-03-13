@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Intraday Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div style="display:flex;flex-direction:row;">
+      <div>
+        <label for="symbol_input">Symbol:</label>
+        <input type="text" id="symbol_input">
+        <button onclick="get_intraday_data()">Go</button>
+      </div>
+      <div style="flex:1;">
+        <h4>Price</h4>
+        <canvas id="price_chart"></canvas>
+        <h4>Volume</h4>
+        <canvas id="volume_chart"></canvas>
+      </div>
+      <div style="flex:1;">
+        <h2>TOP BIG STICKS</h2>
+        <ul id="data_list">
+        </ul>
+      </div>
+    </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  var timeArr = [];
+  var priceArr = [];
+  var volumeArr = [];
+  var chart_price;
+  var chart_volume;
+  
+  function get_intraday_data() {
+    $.ajax({
+      //url: '/intraday/intraday_data',
+      url: '/intraday/intraday_data?symbol=' + symbol,
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {            
+        console.log(data.data)
+        var jsonData = JSON.parse(data.data);
+                
+        // Add new data to the end of arrays if it's newer than the latest data
+        if (timeArr.length === 0 || jsonData[0].time > timeArr[timeArr.length-1]) {
+          timeArr.push(jsonData[0].time);
+          priceArr.push(jsonData[0].price);
+          volumeArr.push(jsonData[0].volume);
+        }
+        // Update the chart
+        chart_price.data.labels = format_time_labels(timeArr);
+        chart_volume.data.labels = format_time_labels(timeArr);
+        chart_price.update();
+        chart_volume.update();
+                
+        update_data_list();
+      }
+    });
+  }
+  
+  function update_data_list() {
+    var list = $('#data_list');
+    list.empty();
+    for (var i = 0; i < timeArr.length; i++) {
+      if (volumeArr[i] > 10000){
+        var item = $('<li></li>');      
+        item.text(format_time_labels(timeArr[i]) + ': ' + priceArr[i] + ':' + volumeArr[i]);
+        list.append(item);
+      }      
+    }
+  } 
+function format_time_labels(timestamps) {
+  var formatted_labels = [];
+  for (var i = 0; i < timestamps.length; i++) {
+    var date = new Date(timestamps[i]);
+    //var hours = date.getHours();
+    var minutes = "0" + date.getMinutes();
+    var seconds = "0" + date.getSeconds();    
+    var formatted_time = minutes.substr(-2) + ':' + seconds.substr(-2);
+    formatted_labels.push(formatted_time);
+  }
+  return formatted_labels;
+}
+  // Create the charts
+  var ctx_price = document.getElementById('price_chart').getContext('2d');
+  chart_price = new Chart(ctx_price, {
+    type: 'line',
+    data: {
+      labels: timeArr,
+      datasets: [{
+        label: 'Price',
+        data: priceArr,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 10
+          }
+        }]
+      }
+    }
+  });
+  
+  var ctx_volume = document.getElementById('volume_chart').getContext('2d');
+  chart_volume = new Chart(ctx_volume, {
+    type: 'bar',
+    data: {
+      labels: timeArr,
+      datasets: [{
+        label: 'Volume',
+        data: volumeArr,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 10
+          }
+        }]
+      }
+    }
+  });
+    
+  setInterval(get_intraday_data, 5000);
+</script>
+</body>
+</html>
+
