@@ -2,15 +2,8 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-8">
             <h1 class="mt-4">{{ question.text }}</h1>
-            {% for answer in answers %}
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <p class="card-text">{{ answer.text }}</p>
-                    </div>
-                </div>
-            {% endfor %}
             <div class="card mb-4">
                 <div class="card-body">
                     <form id="answer-form">
@@ -19,14 +12,29 @@
                             <textarea class="form-control" rows="3" name="answer"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
+                        <button id="microai-btn" class="btn btn-primary">MicroAI Answer</button>
+                        <div id="microai-answer" style="margin-top: 20px;"></div>
+                        <div id="microai-loading" style="display:none; margin-top: 20px;">Loading...</div>
                     </form>
                 </div>
             </div>
+            {% for answer in answers %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="card-title">[{{ answer.text.engine }}] - {{answer.created_at}}</div>
+                        <p class="card-text">{{ answer.text.answer }}</p>                        
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="card mb-4">
+                
+            </div>
+        </div>
+        <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-body">
-                    <button id="microai-btn" class="btn btn-primary">MicroAI Answer</button>
-                    <div id="microai-answer" style="margin-top: 20px;"></div>
-                    <div id="microai-loading" style="display:none; margin-top: 20px;">Loading...</div>
+                    <h5 class="card-title">Number of Answers</h5>
+                    <p class="card-text">{{ answers|length }}</p>
                 </div>
             </div>
         </div>
@@ -38,16 +46,18 @@
             $('#answer-form').on('submit', function(e) {
                 e.preventDefault();
                 $.ajax({
-                    url: '/api/answer',
+                    url: '/answers/answer',
                     method: 'POST',
                     data: $('#answer-form').serialize(),
-                    success: function(response) {
-                        console.log(response);
-                        window.location.reload();
+                    success: function(response) {                        
+                        var answer = response.answer;
+                        var engine = response.engine;
+                        $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p><p class="card-text text-muted">' + engine + ' engine</p></div></div>');
+                        $('#microai-loading').hide();
                     }
                 });
             });
-
+            
             $('#microai-btn').on('click', function(e) {
                 e.preventDefault();
                 var question = '{{ question.text }}';
@@ -55,13 +65,11 @@
                 $.ajax({
                     url: '/answers/microai_answer',
                     method: 'POST',
-                    data: $('#answer-form').serialize(),                    
-                    success: function(response) {
-                        var answer = response.answer;
-                        //var answer = response;
-                        //console.log('Trả về: ' + answer.text)
-                        //$('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + JSON.stringify(answer) + '</p></div></div>');
-                        $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p></div></div>');
+                    data: $('#answer-form').serialize(),
+                    success: function(response) {                        
+                        var answer = response.answer.answer;
+                        var engine = response.answer.engine;
+                        $('#microai-answer').html('<div class="card mb-4"><div class="card-body"><p class="card-text">' + answer + '</p><p class="card-text text-muted">' + engine + ' engine</p></div></div>');
                         $('#microai-loading').hide();
                     }
                 });

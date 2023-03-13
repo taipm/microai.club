@@ -63,10 +63,7 @@ def answer_question():
     answer_text = request.form.get('answer')
     print(f'Đang trả lời {question_id} : {answer_text}')
     # Tìm câu hỏi tương ứng trong cơ sở dữ liệu
-    question = Question.get_by_id(question_id)
-
-    # Tạo câu trả lời mới
-    #answer = Answer(answer_text)
+    question = Question.get_by_id(question_id)    
     answer = Answer(text=answer_text, question_id=question_id)
     #answer.question_id = question_id
 
@@ -77,22 +74,25 @@ def answer_question():
     question.answers.append(answer)
     question.save()
 
+    #return jsonify({'answer': answer_text})
     # Trả về thông tin của câu trả lời để cập nhật trang web
     return jsonify({
-        'answer_text': answer.text,
+        'engine':'User',
+        'answer': answer.text,
         'created_at': answer.created_at.strftime('%Y-%m-%d %H:%M:%S')
     })
 
 @answers_bp.route('/microai_answer', methods=['POST'])
-def microai_answer():
+def microai_answer():    
     question_id = request.form.get('question_id')
+    print(f'Đang gọi hàm micro_answer(){question_id}')
     question = Question.get_by_id(question_id)
     if not question:
         return jsonify({'success': False, 'message': 'Question not found'}), 404
     open_ai_key = get_openai_key()
     text = MicroAI(api_key=open_ai_key).generate_answer(question.text)
     answer = question.add_answer(text)
-    return jsonify({'answer': text['answer']})
+    return jsonify({'answer': text})
 
 @answers_bp.route('/translate', methods=['POST'])
 def translate():

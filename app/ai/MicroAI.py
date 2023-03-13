@@ -21,8 +21,8 @@ class MicroAI:
             return "text-davinci-003"
         elif any(token.text.lower() in ['create', 'build', 'design', 'generate'] for token in doc):
             return "davinci-codex"
-        else:
-            return "text-davinci-002"
+        else:            
+            return "text-davinci-003"
 
     def generate_answer(self, question):
         wolfram = WolframAlpha(app_id=get_wolframalpha_key())
